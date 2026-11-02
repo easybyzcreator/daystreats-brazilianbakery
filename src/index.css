@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap');
+
+@theme {
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
+body {
+  @apply font-sans;
+  color: var(--text-color, #111827);
+  background-color: #ece6db;
+}
+
+input, textarea, select {
+  @apply font-sans;
+  color: #111827; /* Force dark text for form fields */
+}
+
+.glass {
+  @apply backdrop-blur-xl border border-white/40 shadow-sm;
+  background-color: var(--glass-color, rgba(255, 255, 255, 0.95));
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-serif;
+  color: var(--text-color, #111827);
+}
+
+.force-dark-headings h1,
+.force-dark-headings h2,
+.force-dark-headings h3,
+.force-dark-headings h4,
+.force-dark-headings h5,
+.force-dark-headings h6 {
+  color: #000000 !important;
+}

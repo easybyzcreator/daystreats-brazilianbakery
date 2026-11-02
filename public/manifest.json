@@ -1,0 +1,22 @@
+{
+  "name": "Day’s Treats",
+  "short_name": "Day’s Treats",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#865d39",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/easybyzcreator/imagens/f6d6f2e0a2c3796a81101c96241af5ad1a19cefb/logo%20days%20treats.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/easybyzcreator/imagens/f6d6f2e0a2c3796a81101c96241af5ad1a19cefb/logo%20days%20treats.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

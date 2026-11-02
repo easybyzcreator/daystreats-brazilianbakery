@@ -1,0 +1,71 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 1. Segurança Global: Nega todo acesso por padrão
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Funções auxiliares globais
+    function isAdmin() {
+      // Como o painel administrador autentica via Anonymous Auth (signInAnonymously),
+      // qualquer usuário autenticado (request.auth != null) é considerado administrador do app.
+      return request.auth != null;
+    }
+
+    // --- COLEÇÃO: configuracoes ---
+    // Configurações de cores, logo, WhatsApp, slogan e estilos gerais.
+    match /configuracoes/{configId} {
+      allow read: if true; // Qualquer cliente precisa ler herdar as cores e marca do restaurante
+      allow write: if isAdmin(); // Apenas o administrador autenticado pode alterar
+    }
+
+    // --- COLEÇÃO: produtos ---
+    // Pratos do cardápio.
+    match /produtos/{produtoId} {
+      allow read: if true; // Qualquer cliente precisa visualizar os pratos
+      allow write: if isAdmin(); // Apenas o administrador cadastrar, editar e excluir
+    }
+
+    // --- COLEÇÃO: categorias ---
+    // Categorias dos pratos (ex: Acarajé, Sobremesas, Bebidas).
+    match /categorias/{categoriaId} {
+      allow read: if true; // Qualquer cliente precisa ler as categorias para navegar no menu
+      allow write: if isAdmin(); // Apenas o administrador pode ordenar/gerenciar
+    }
+
+    // --- COLEÇÃO: acompanhamentos ---
+    // Opções extras para personalizar as refeições.
+    match /acompanhamentos/{acompanhamentoId} {
+      allow read: if true; // Qualquer cliente precisa visualizar as opções de acompanhamento
+      allow write: if isAdmin(); // Apenas o administrador gerenciar
+    }
+
+    // --- COLEÇÃO: galerias ---
+    // Galerias de imagens de estilo / referência visual de bolos.
+    match /galerias/{galeriaId} {
+      allow read: if true; // Qualquer cliente precisa visualizar os modelos de bolo
+      allow write: if isAdmin(); // Apenas o administrador autenticado pode gerenciar as galerias
+    }
+
+    // --- COLEÇÃO: pedidos ---
+    // Pedidos enviados pelos clientes.
+    match /pedidos/{pedidoId} {
+      // Criação de pedidos: Qualquer cliente ou usuário pode enviar um pedido (create)
+      // Adicionamos validações essenciais de tipo e tamanho para evitar spam no seu banco.
+      allow create: if true 
+        && request.resource.data.customerName is string
+        && request.resource.data.customerName.size() > 0
+        && request.resource.data.customerName.size() <= 100
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() > 0
+        && request.resource.data.items is list
+        && request.resource.data.items.size() > 0;
+        
+      // Leitura e gerenciamento de pedidos (histórico, deleção, edição):
+      // Apenas o administrador autenticado tem acesso a esses dados pessoais dos clientes.
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
